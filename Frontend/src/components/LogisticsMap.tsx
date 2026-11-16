@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import { DeliveryAssignment, Driver } from '../types';
@@ -9,7 +9,6 @@ import {
   Package,
   Phone,
   User,
-  GripHorizontal,
   Truck,
   Radio
 } from 'lucide-react';
@@ -173,46 +172,6 @@ export const LogisticsMap: React.FC<LogisticsMapProps> = ({
   onToggleDelivered,
   heightClass = 'h-[540px]'
 }) => {
-  // Draggable Legend State inside the Map
-  const [legendPos, setLegendPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  const [draggingLegend, setDraggingLegend] = useState(false);
-  const dragRef = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(
-    null
-  );
-
-  const handleLegendPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-    e.currentTarget.setPointerCapture(e.pointerId);
-    setDraggingLegend(true);
-    dragRef.current = {
-      startX: e.clientX,
-      startY: e.clientY,
-      origX: legendPos.x,
-      origY: legendPos.y
-    };
-  };
-
-  const handleLegendPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!draggingLegend || !dragRef.current) return;
-    e.stopPropagation();
-    setLegendPos({
-      x: dragRef.current.origX + (e.clientX - dragRef.current.startX),
-      y: dragRef.current.origY + (e.clientY - dragRef.current.startY)
-    });
-  };
-
-  const handleLegendPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!draggingLegend) return;
-    e.stopPropagation();
-    try {
-      e.currentTarget.releasePointerCapture(e.pointerId);
-    } catch {
-      // ignore
-    }
-    setDraggingLegend(false);
-    dragRef.current = null;
-  };
-
   const getDriverColor = (driverId?: string | null, fallbackIdx = 0): string => {
     if (!driverId) return '#276EF1';
     const found = drivers.find((d) => d.id === driverId);
@@ -502,20 +461,10 @@ export const LogisticsMap: React.FC<LogisticsMapProps> = ({
         })}
       </MapContainer>
 
-      {/* Draggable Liquid Glass Map Legend Overlay (Shows Pool, Delivered & Each Driver's Color!) */}
+      {/* Liquid Glass Map Legend Overlay (Shows Pool, Delivered & Each Driver's Color!) */}
       <div
-        onPointerDown={handleLegendPointerDown}
-        onPointerMove={handleLegendPointerMove}
-        onPointerUp={handleLegendPointerUp}
-        style={{
-          transform: `translate3d(${legendPos.x}px, ${legendPos.y}px, 0)`
-        }}
-        title="Drag this Liquid Glass legend anywhere on the map"
-        className="absolute bottom-3 left-3 z-[400] liquid-glass-strong px-3.5 py-2 rounded-2xl flex flex-wrap items-center gap-3 text-xs font-bold cursor-grab active:cursor-grabbing select-none max-w-[92%]"
+        className="absolute bottom-3 left-3 z-[400] liquid-glass-strong px-3.5 py-2 rounded-2xl flex flex-wrap items-center gap-3 text-xs font-bold select-none max-w-[92%]"
       >
-        <span className="inline-flex items-center gap-1 text-[#276EF1] opacity-85">
-          <GripHorizontal className="w-3.5 h-3.5" />
-        </span>
         <span className="inline-flex items-center gap-1.5" style={{ color: 'var(--text-heading)' }}>
           <span className="w-3 h-3 rounded-full bg-[#FCB900] border border-white/60 inline-block shadow-sm" />
           Pool

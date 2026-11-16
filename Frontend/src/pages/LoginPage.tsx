@@ -7,8 +7,8 @@ import { Lock, Mail, AlertCircle, Sun, Moon } from 'lucide-react';
 export const LoginPage: React.FC = () => {
   const { login } = useAuth();
   const { theme, toggleTheme } = useGlassTheme();
-  const [email, setEmail] = useState('admin@matibox.no');
-  const [password, setPassword] = useState('admin');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 

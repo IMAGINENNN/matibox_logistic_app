@@ -6,7 +6,7 @@ import { useLogisticsHub } from '../hooks/useLogisticsHub';
 import { Car, DeliveryAssignment, Driver } from '../types';
 import { LogisticsMap } from '../components/LogisticsMap';
 import { MatiboxLogo } from '../components/MatiboxLogo';
-import { MovableGlassPanel } from '../components/MovableGlassPanel';
+import { GlassPanel } from '../components/GlassPanel';
 import {
   ArrowDown,
   ArrowUp,
@@ -55,7 +55,6 @@ export const DriverDashboard: React.FC = () => {
   const [optimizing, setOptimizing] = useState<boolean>(false);
   const [statusMsg, setStatusMsg] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [resetTrigger, setResetTrigger] = useState<number>(0);
   const [gpsSharingActive, setGpsSharingActive] = useState<boolean>(false);
 
   // Drag & drop state for driver route reordering and claiming
@@ -367,52 +366,14 @@ export const DriverDashboard: React.FC = () => {
   return (
     <div className="min-h-screen pb-24">
       {/* Floating Apple Liquid Glass Top Driver Header */}
-      <header className="sticky top-0 z-40 px-3 pt-3">
-        <div className="max-w-2xl mx-auto liquid-glass-strong rounded-3xl px-4 py-3 space-y-3">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-3">
+      <header className="sticky top-0 z-40 px-2.5 sm:px-3 pt-2.5 sm:pt-3">
+        <div className="w-full max-w-2xl mx-auto liquid-glass-strong rounded-3xl px-3 sm:px-4 py-3 space-y-2.5 overflow-hidden">
+          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 min-w-0">
+            <div className="shrink-0">
               <MatiboxLogo size="sm" darkText={theme === 'dark'} />
-              <div className="h-6 w-px bg-white/15 hidden sm:block" />
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <span
-                    className="w-3 h-3 rounded-full border border-white shrink-0"
-                    style={{ backgroundColor: myColor }}
-                    title="Your Route Color"
-                  />
-                  <span className="font-extrabold text-xs sm:text-sm" style={{ color: 'var(--text-heading)' }}>
-                    {user?.name}
-                  </span>
-                  <span
-                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
-                      gpsSharingActive
-                        ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/35'
-                        : 'bg-[#FCB900]/20 text-[#FCB900]'
-                    }`}
-                  >
-                    <Radio className="w-2.5 h-2.5 animate-pulse" />
-                    {gpsSharingActive ? 'GPS Live' : 'Connecting GPS'}
-                  </span>
-                </div>
-                <p className="text-[11px] font-semibold flex items-center gap-1 mt-0.5" style={{ color: 'var(--text-muted)' }}>
-                  <Truck className="w-3 h-3" style={{ color: myColor }} />
-                  {myTakenCars.length > 0
-                    ? myTakenCars.map((c) => `${c.name} (${c.numberPlate})`).join(', ')
-                    : 'No Car Taken — Tap Cars Tab to Take a Vehicle'}
-                </p>
-              </div>
             </div>
 
-            <div className="flex items-center gap-1.5">
-              <button
-                onClick={() => setResetTrigger((n) => n + 1)}
-                title="Reset moved panels"
-                className="p-2 rounded-full liquid-glass-subtle hover:border-[#276EF1] transition cursor-pointer"
-                style={{ color: 'var(--text-heading)' }}
-              >
-                <RotateCcw className="w-3.5 h-3.5" style={{ color: accentHex }} />
-              </button>
-
+            <div className="flex items-center gap-1.5 shrink-0 sm:order-3">
               <button
                 onClick={toggleTheme}
                 title="Toggle Daylight / Uber Night Drive Glass"
@@ -434,10 +395,47 @@ export const DriverDashboard: React.FC = () => {
                 Exit
               </button>
             </div>
+
+            <div className="w-full sm:w-auto sm:flex-1 sm:order-2 min-w-0 sm:pl-3 sm:border-l sm:border-white/15">
+              <div className="flex flex-wrap items-center gap-1.5 min-w-0">
+                <span
+                  className="w-3 h-3 rounded-full border border-white shrink-0"
+                  style={{ backgroundColor: myColor }}
+                  title="Your Route Color"
+                />
+                <span
+                  className="font-extrabold text-xs sm:text-sm truncate"
+                  style={{ color: 'var(--text-heading)' }}
+                >
+                  {user?.name}
+                </span>
+                <span
+                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold shrink-0 ${
+                    gpsSharingActive
+                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/35'
+                      : 'bg-[#FCB900]/20 text-[#FCB900]'
+                  }`}
+                >
+                  <Radio className="w-2.5 h-2.5 animate-pulse" />
+                  {gpsSharingActive ? 'GPS Live' : 'Connecting GPS'}
+                </span>
+              </div>
+              <p
+                className="text-[11px] font-semibold flex items-center gap-1 mt-0.5 min-w-0"
+                style={{ color: 'var(--text-muted)' }}
+              >
+                <Truck className="w-3 h-3 shrink-0" style={{ color: myColor }} />
+                <span className="truncate">
+                  {myTakenCars.length > 0
+                    ? myTakenCars.map((c) => `${c.name} (${c.numberPlate})`).join(', ')
+                    : 'No Car Taken — Tap Cars Tab to Take a Vehicle'}
+                </span>
+              </p>
+            </div>
           </div>
 
           {/* Segmented View Switcher */}
-          <div className="grid grid-cols-3 gap-2 liquid-glass-subtle p-1 rounded-2xl">
+          <div className="grid grid-cols-3 gap-1.5 sm:gap-2 liquid-glass-subtle p-1 rounded-2xl">
             <button
               onClick={() => setActiveTab('route')}
               onDragOver={(e) => {
@@ -454,37 +452,37 @@ export const DriverDashboard: React.FC = () => {
                   setActiveTab('route');
                 }
               }}
-              className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wider transition cursor-pointer ${
+              className={`min-w-0 flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1.5 py-2 sm:py-2.5 px-1 sm:px-2 rounded-xl text-[10px] sm:text-xs font-extrabold uppercase tracking-normal sm:tracking-wider leading-tight text-center transition cursor-pointer ${
                 dragOverRouteTab ? 'drop-zone-active scale-105' : ''
               } ${
                 activeTab === 'route' ? 'liquid-btn-orange' : 'hover:bg-white/10'
               }`}
               style={activeTab !== 'route' ? { color: 'var(--text-heading)' } : undefined}
             >
-              <ListChecks className="w-4 h-4" />
-              My Route ({myStops.length})
+              <ListChecks className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+              <span className="truncate max-w-full">My Route ({myStops.length})</span>
             </button>
 
             <button
               onClick={() => setActiveTab('pool')}
-              className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wider transition cursor-pointer ${
+              className={`min-w-0 flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1.5 py-2 sm:py-2.5 px-1 sm:px-2 rounded-xl text-[10px] sm:text-xs font-extrabold uppercase tracking-normal sm:tracking-wider leading-tight text-center transition cursor-pointer ${
                 activeTab === 'pool' ? 'liquid-btn-orange' : 'hover:bg-white/10'
               }`}
               style={activeTab !== 'pool' ? { color: 'var(--text-heading)' } : undefined}
             >
-              <PlusCircle className="w-4 h-4 text-[#FCB900]" />
-              Pick Stops ({poolStops.length})
+              <PlusCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 text-[#FCB900]" />
+              <span className="truncate max-w-full">Pick Stops ({poolStops.length})</span>
             </button>
 
             <button
               onClick={() => setActiveTab('cars')}
-              className={`flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wider transition cursor-pointer ${
+              className={`min-w-0 flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1.5 py-2 sm:py-2.5 px-1 sm:px-2 rounded-xl text-[10px] sm:text-xs font-extrabold uppercase tracking-normal sm:tracking-wider leading-tight text-center transition cursor-pointer ${
                 activeTab === 'cars' ? 'liquid-btn-orange' : 'hover:bg-white/10'
               }`}
               style={activeTab !== 'cars' ? { color: 'var(--text-heading)' } : undefined}
             >
-              <CarFront className="w-4 h-4" />
-              Cars ({cars.length})
+              <CarFront className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+              <span className="truncate max-w-full">Cars ({cars.length})</span>
             </button>
           </div>
         </div>
@@ -508,19 +506,13 @@ export const DriverDashboard: React.FC = () => {
           </div>
         )}
 
-        {/* Movable Route Progress Liquid Glass Card */}
-        <MovableGlassPanel
-          id="driver_progress_card"
-          resetTrigger={resetTrigger}
-          compactHandle
-          allowMinimize={false}
-          bodyClassName="px-4 pb-3.5 pt-1 space-y-2"
-        >
-          <div className="flex items-center justify-between text-xs">
+        {/* Route Progress Liquid Glass Card */}
+        <GlassPanel bodyClassName="px-4 py-3.5 space-y-2">
+          <div className="flex items-center justify-between text-xs gap-2">
             <span className="font-extrabold" style={{ color: 'var(--text-heading)' }}>
               Today's Route: {deliveredCount} of {totalStops} Delivered ({progressPct}%)
             </span>
-            <span className="font-extrabold" style={{ color: myColor }}>
+            <span className="font-extrabold shrink-0" style={{ color: myColor }}>
               {remainingCrates} units left
             </span>
           </div>
@@ -533,17 +525,15 @@ export const DriverDashboard: React.FC = () => {
               }}
             />
           </div>
-        </MovableGlassPanel>
+        </GlassPanel>
 
         {/* NEXT STOP SPOTLIGHT HERO CARD */}
         {activeTab === 'route' && nextActiveStop && (
-          <MovableGlassPanel
-            id="driver_next_stop_spotlight"
-            resetTrigger={resetTrigger}
+          <GlassPanel
             title={
-              <span className="inline-flex items-center gap-2">
+              <span className="inline-flex flex-wrap items-center gap-2">
                 <span
-                  className="px-2 py-0.5 rounded-full text-white text-[10px] font-extrabold uppercase tracking-wider"
+                  className="px-2 py-0.5 rounded-full text-white text-[10px] font-extrabold uppercase tracking-wider shrink-0"
                   style={{ backgroundColor: myColor }}
                 >
                   Next Up #{nextActiveStop.sequenceOrder || 1}
@@ -551,7 +541,7 @@ export const DriverDashboard: React.FC = () => {
                 <span>{nextActiveStop.kindergarten.name}</span>
               </span>
             }
-            subtitle="One-tap glove-friendly driver controls • Drag window anywhere"
+            subtitle="One-tap glove-friendly driver controls"
             className="ring-2 ring-[#276EF1]/60"
             bodyClassName="p-4 space-y-3"
           >
@@ -617,7 +607,7 @@ export const DriverDashboard: React.FC = () => {
                 Complete Stop ✓
               </button>
             </div>
-          </MovableGlassPanel>
+          </GlassPanel>
         )}
 
         {/* Action Toolbar: Optimize + Search + Map Toggle */}
@@ -626,7 +616,7 @@ export const DriverDashboard: React.FC = () => {
             <button
               onClick={handleOptimizeRoute}
               disabled={optimizing || myStops.length < 2}
-              className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-2xl liquid-btn-orange disabled:opacity-40 text-xs font-extrabold uppercase tracking-wider cursor-pointer"
+              className="flex-1 min-w-0 inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-2xl liquid-btn-orange disabled:opacity-40 text-xs font-extrabold uppercase tracking-wider cursor-pointer"
             >
               <Compass className={`w-4 h-4 ${optimizing ? 'animate-spin' : ''}`} />
               {optimizing ? 'Optimizing GPS Route...' : 'Auto-Optimize Route (Deadline + GPS)'}
@@ -669,11 +659,9 @@ export const DriverDashboard: React.FC = () => {
           </button>
         </div>
 
-        {/* Collapsible & Movable Interactive Leaflet Map */}
+        {/* Collapsible Interactive Leaflet Map */}
         {showMap && (
-          <MovableGlassPanel
-            id="driver_map_window"
-            resetTrigger={resetTrigger}
+          <GlassPanel
             allowExpand
             title="Live Route & Pool Map"
             subtitle="Your live GPS position is shared with Dispatch"
@@ -686,14 +674,12 @@ export const DriverDashboard: React.FC = () => {
               onToggleDelivered={handleToggleDelivered}
               heightClass="h-[340px]"
             />
-          </MovableGlassPanel>
+          </GlassPanel>
         )}
 
         {/* TAB 1: DRIVER'S DRAGGABLE ROUTE CHECKLIST */}
         {activeTab === 'route' && (
-          <MovableGlassPanel
-            id="driver_route_list_panel"
-            resetTrigger={resetTrigger}
+          <GlassPanel
             title={`My Delivery Sequence (${myStops.length} Stops)`}
             subtitle="Drag any stop card to reorder your sequence, or use Up/Down arrows"
             bodyClassName="p-3 space-y-3"
@@ -731,7 +717,11 @@ export const DriverDashboard: React.FC = () => {
                   <div
                     key={stop.id}
                     draggable
-                    onDragStart={() => setDraggedStopId(stop.id)}
+                    onDragStart={(e) => {
+                      e.dataTransfer.effectAllowed = 'move';
+                      e.dataTransfer.setData('text/plain', String(stop.id));
+                      setDraggedStopId(stop.id);
+                    }}
                     onDragEnd={() => {
                       setDraggedStopId(null);
                       setDragOverStopId(null);
@@ -835,7 +825,7 @@ export const DriverDashboard: React.FC = () => {
                     </div>
 
                     {/* Action Buttons Row */}
-                    <div className="pt-2 border-t border-white/10 grid grid-cols-12 gap-2">
+                    <div className="pt-2 border-t border-white/10 grid grid-cols-12 gap-1.5 sm:gap-2">
                       <a
                         href={
                           k.googleMapsUrl ||
@@ -843,23 +833,23 @@ export const DriverDashboard: React.FC = () => {
                         }
                         target="_blank"
                         rel="noreferrer"
-                        className="col-span-5 inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl liquid-btn-espresso text-xs font-extrabold uppercase tracking-wider transition"
+                        className="col-span-5 inline-flex items-center justify-center gap-1 sm:gap-1.5 py-2.5 px-2 sm:px-3 rounded-xl liquid-btn-espresso text-[11px] sm:text-xs font-extrabold uppercase tracking-wider transition"
                       >
-                        <Navigation className="w-3.5 h-3.5 text-[#FCB900]" />
-                        Navigate
-                        <ExternalLink className="w-3 h-3 opacity-70" />
+                        <Navigation className="w-3.5 h-3.5 text-[#FCB900] shrink-0" />
+                        <span>Navigate</span>
+                        <ExternalLink className="w-3 h-3 opacity-70 shrink-0 hidden sm:inline" />
                       </a>
 
                       <button
                         onClick={() => handleToggleDelivered(stop)}
-                        className={`col-span-5 inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs font-extrabold uppercase tracking-wider transition cursor-pointer ${
+                        className={`col-span-5 inline-flex items-center justify-center gap-1 sm:gap-1.5 py-2.5 px-2 sm:px-3 rounded-xl text-[11px] sm:text-xs font-extrabold uppercase tracking-wider transition cursor-pointer ${
                           stop.isDelivered
                             ? 'bg-emerald-600 text-white shadow-sm'
                             : 'liquid-btn-orange'
                         }`}
                       >
-                        <CheckCircle2 className="w-4 h-4" />
-                        {stop.isDelivered ? 'Delivered ✓' : 'Mark Done'}
+                        <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                        <span>{stop.isDelivered ? 'Delivered ✓' : 'Mark Done'}</span>
                       </button>
 
                       <button
@@ -874,14 +864,12 @@ export const DriverDashboard: React.FC = () => {
                 );
               })
             )}
-          </MovableGlassPanel>
+          </GlassPanel>
         )}
 
         {/* TAB 2: AVAILABLE POOL (SELF-PICK KINDERGARTENS) */}
         {activeTab === 'pool' && (
-          <MovableGlassPanel
-            id="driver_pool_list_panel"
-            resetTrigger={resetTrigger}
+          <GlassPanel
             title={`Available Kindergarten Pool (${poolStops.length})`}
             subtitle="Tap Claim or drag any stop onto the 'My Route' tab above"
             bodyClassName="p-3 space-y-3"
@@ -905,7 +893,11 @@ export const DriverDashboard: React.FC = () => {
                   <div
                     key={stop.id}
                     draggable
-                    onDragStart={() => setDraggedStopId(stop.id)}
+                    onDragStart={(e) => {
+                      e.dataTransfer.effectAllowed = 'move';
+                      e.dataTransfer.setData('text/plain', String(stop.id));
+                      setDraggedStopId(stop.id);
+                    }}
                     onDragEnd={() => {
                       setDraggedStopId(null);
                       setDragOverRouteTab(false);
@@ -967,14 +959,12 @@ export const DriverDashboard: React.FC = () => {
                 );
               })
             )}
-          </MovableGlassPanel>
+          </GlassPanel>
         )}
 
         {/* TAB 3: CARS FLEET (DRIVERS CAN ONLY TAKE OR DROP CARS — MULTIPLE DRIVERS CAN SHARE A CAR) */}
         {activeTab === 'cars' && (
-          <MovableGlassPanel
-            id="driver_cars_panel"
-            resetTrigger={resetTrigger}
+          <GlassPanel
             title={`Delivery Cars (${cars.length})`}
             subtitle="Take or drop your delivery car • Several drivers can take the same car"
             bodyClassName="p-3 space-y-3"
@@ -1074,7 +1064,7 @@ export const DriverDashboard: React.FC = () => {
                 );
               })
             )}
-          </MovableGlassPanel>
+          </GlassPanel>
         )}
       </main>
 

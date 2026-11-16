@@ -14,7 +14,7 @@ import {
 } from '../types';
 import { LogisticsMap } from '../components/LogisticsMap';
 import { MatiboxLogo } from '../components/MatiboxLogo';
-import { MovableGlassPanel } from '../components/MovableGlassPanel';
+import { GlassPanel } from '../components/GlassPanel';
 import {
   AlertTriangle,
   ArrowDown,
@@ -75,7 +75,6 @@ export const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<AdminTab>('dispatch');
   const [dispatchMode, setDispatchMode] = useState<DispatchLayoutMode>('split');
   const [swapSplitPanels, setSwapSplitPanels] = useState<boolean>(false);
-  const [resetTrigger, setResetTrigger] = useState<number>(0);
 
   const [selectedDate, setSelectedDate] = useState<string>(() => {
     const now = new Date();
@@ -97,21 +96,10 @@ export const AdminDashboard: React.FC = () => {
   const [refreshConfirmOpen, setRefreshConfirmOpen] = useState<boolean>(false);
   const [refreshingData, setRefreshingData] = useState<boolean>(false);
 
-  // Drag & Drop State for Stops and KPI Cards
+  // Drag & Drop State for Kindergarten Stops
   const [draggedAssignmentId, setDraggedAssignmentId] = useState<number | null>(null);
   const [dragOverTarget, setDragOverTarget] = useState<string | null>(null);
   const [dragOverStopId, setDragOverStopId] = useState<number | null>(null);
-
-  const [kpiOrder, setKpiOrder] = useState<KpiId[]>(() => {
-    try {
-      const saved = localStorage.getItem('matibox_kpi_order');
-      if (saved) return JSON.parse(saved);
-    } catch {
-      // ignore
-    }
-    return ['total', 'unassigned', 'transit', 'delivered', 'meals'];
-  });
-  const [draggedKpi, setDraggedKpi] = useState<KpiId | null>(null);
 
   // Kindergarten Modal State
   const [kgModalOpen, setKgModalOpen] = useState(false);
@@ -428,40 +416,14 @@ export const AdminDashboard: React.FC = () => {
     }
   };
 
-  // KPI Card Drag Reorder
-  const handleKpiDrop = (targetKpi: KpiId) => {
-    if (!draggedKpi || draggedKpi === targetKpi) return;
-    const updated = [...kpiOrder];
-    const fromIdx = updated.indexOf(draggedKpi);
-    const toIdx = updated.indexOf(targetKpi);
-    if (fromIdx === -1 || toIdx === -1) return;
-    updated.splice(fromIdx, 1);
-    updated.splice(toIdx, 0, draggedKpi);
-    setKpiOrder(updated);
-    setDraggedKpi(null);
-    try {
-      localStorage.setItem('matibox_kpi_order', JSON.stringify(updated));
-    } catch {
-      // ignore
-    }
-  };
-
   // Confirm "Refresh Data" -> Reset all assignments for today to default (No assignments)
   const handleConfirmRefreshData = async () => {
     setRefreshingData(true);
     setActionError(null);
     try {
       await api.deliveries.reset(selectedDate);
-      const defaultKpi: KpiId[] = ['total', 'unassigned', 'transit', 'delivered', 'meals'];
-      setKpiOrder(defaultKpi);
       setSwapSplitPanels(false);
       setDriverFilter('ALL');
-      setResetTrigger((n) => n + 1);
-      try {
-        localStorage.removeItem('matibox_kpi_order');
-      } catch {
-        // ignore
-      }
       await fetchAllData();
       setRefreshConfirmOpen(false);
       showToast('All assignments for today have been reset to default (Unassigned)!');
@@ -790,51 +752,39 @@ export const AdminDashboard: React.FC = () => {
     const cfg = configs[kpiId];
 
     return (
-      <div
+      <GlassPanel
         key={kpiId}
-        draggable
-        onDragStart={() => setDraggedKpi(kpiId)}
-        onDragOver={(e) => e.preventDefault()}
-        onDrop={() => handleKpiDrop(kpiId)}
-        className="transition-transform"
+        className={`transition ${
+          cfg.onClick ? 'cursor-pointer' : ''
+        } ${
+          cfg.active ? 'ring-2 ring-[#276EF1]' : cfg.onClick ? 'hover:border-[#276EF1]/50' : ''
+        }`}
+        bodyClassName="px-4 py-3.5"
       >
-        <MovableGlassPanel
-          id={`admin_kpi_${kpiId}`}
-          resetTrigger={resetTrigger}
-          compactHandle
-          allowMinimize={false}
-          className={`cursor-pointer transition ${
-            cfg.active ? 'ring-2 ring-[#276EF1]' : 'hover:border-[#276EF1]/50'
-          }`}
-          bodyClassName="px-4 pb-3.5 pt-0.5"
-        >
-          <div onClick={cfg.onClick}>
-            <div
-              className="text-[11px] font-bold uppercase tracking-wider"
-              style={{ color: 'var(--text-muted)' }}
-            >
-              {cfg.label}
-            </div>
-            <div
-              className="text-2xl font-extrabold mt-0.5 tracking-tight"
-              style={{ color: cfg.accentColor }}
-            >
-              {cfg.value}
-            </div>
-            <div className="text-[11px] font-medium mt-0.5" style={{ color: 'var(--text-body)' }}>
-              {cfg.sub}
-            </div>
+        <div onClick={cfg.onClick}>
+          <div
+            className="text-[11px] font-bold uppercase tracking-wider"
+            style={{ color: 'var(--text-muted)' }}
+          >
+            {cfg.label}
           </div>
-        </MovableGlassPanel>
-      </div>
+          <div
+            className="text-2xl font-extrabold mt-0.5 tracking-tight"
+            style={{ color: cfg.accentColor }}
+          >
+            {cfg.value}
+          </div>
+          <div className="text-[11px] font-medium mt-0.5" style={{ color: 'var(--text-body)' }}>
+            {cfg.sub}
+          </div>
+        </div>
+      </GlassPanel>
     );
   };
 
   // Map Panel Component (reused in Split View left or right)
   const mapPanelNode = (
-    <MovableGlassPanel
-      id="admin_map_panel"
-      resetTrigger={resetTrigger}
+    <GlassPanel
       allowExpand
       title={
         <span className="inline-flex items-center gap-2">
@@ -971,14 +921,12 @@ export const AdminDashboard: React.FC = () => {
         onToggleDelivered={handleToggleDelivered}
         heightClass="h-[530px]"
       />
-    </MovableGlassPanel>
+    </GlassPanel>
   );
 
   // Queue Panel Component
   const queuePanelNode = (
-    <MovableGlassPanel
-      id="admin_queue_panel"
-      resetTrigger={resetTrigger}
+    <GlassPanel
       allowExpand
       title={
         driverFilter === 'ALL'
@@ -1034,7 +982,11 @@ export const AdminDashboard: React.FC = () => {
             <div
               key={a.id}
               draggable
-              onDragStart={() => setDraggedAssignmentId(a.id)}
+              onDragStart={(e) => {
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', String(a.id));
+                setDraggedAssignmentId(a.id);
+              }}
               onDragEnd={() => {
                 setDraggedAssignmentId(null);
                 setDragOverStopId(null);
@@ -1197,7 +1149,7 @@ export const AdminDashboard: React.FC = () => {
           );
         })
       )}
-    </MovableGlassPanel>
+    </GlassPanel>
   );
 
   return (
@@ -1316,9 +1268,11 @@ export const AdminDashboard: React.FC = () => {
           </div>
         )}
 
-        {/* Draggable & Reorderable KPI Summary Strip */}
+        {/* KPI Summary Strip */}
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3.5">
-          {kpiOrder.map((kpiId) => renderKpiCard(kpiId))}
+          {(['total', 'unassigned', 'transit', 'delivered', 'meals'] as KpiId[]).map((kpiId) =>
+            renderKpiCard(kpiId)
+          )}
         </div>
 
         {/* Navigation & Mode Switcher Bar */}
@@ -1536,9 +1490,7 @@ export const AdminDashboard: React.FC = () => {
                         dragOverTarget === `UNDER_MAP_${drv.id}` ? 'drop-zone-active' : ''
                       }`}
                     >
-                      <MovableGlassPanel
-                        id={`under_map_driver_card_${drv.id}`}
-                        resetTrigger={resetTrigger}
+                      <GlassPanel
                         title={
                           <div className="flex items-center gap-2.5 flex-wrap">
                             <span
@@ -1628,7 +1580,11 @@ export const AdminDashboard: React.FC = () => {
                                 <div
                                   key={stop.id}
                                   draggable
-                                  onDragStart={() => setDraggedAssignmentId(stop.id)}
+                                  onDragStart={(e) => {
+                                    e.dataTransfer.effectAllowed = 'move';
+                                    e.dataTransfer.setData('text/plain', String(stop.id));
+                                    setDraggedAssignmentId(stop.id);
+                                  }}
                                   onDragEnd={() => {
                                     setDraggedAssignmentId(null);
                                     setDragOverStopId(null);
@@ -1723,7 +1679,7 @@ export const AdminDashboard: React.FC = () => {
                             })
                           )}
                         </div>
-                      </MovableGlassPanel>
+                      </GlassPanel>
                     </div>
                   );
                 })}
@@ -1754,9 +1710,7 @@ export const AdminDashboard: React.FC = () => {
                 dragOverTarget === 'UNASSIGNED_COL' ? 'drop-zone-active' : ''
               }`}
             >
-              <MovableGlassPanel
-                id="kanban_col_unassigned"
-                resetTrigger={resetTrigger}
+              <GlassPanel
                 title={
                   <span className="inline-flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-[#FCB900]" />
@@ -1774,7 +1728,11 @@ export const AdminDashboard: React.FC = () => {
                       <div
                         key={a.id}
                         draggable
-                        onDragStart={() => setDraggedAssignmentId(a.id)}
+                        onDragStart={(e) => {
+                          e.dataTransfer.effectAllowed = 'move';
+                          e.dataTransfer.setData('text/plain', String(a.id));
+                          setDraggedAssignmentId(a.id);
+                        }}
                         onDragEnd={() => {
                           setDraggedAssignmentId(null);
                           setDragOverTarget(null);
@@ -1831,7 +1789,7 @@ export const AdminDashboard: React.FC = () => {
                       </div>
                     );
                   })}
-              </MovableGlassPanel>
+              </GlassPanel>
             </div>
 
             {/* Driver Columns */}
@@ -1863,9 +1821,7 @@ export const AdminDashboard: React.FC = () => {
                     dragOverTarget === `COL_${drv.id}` ? 'drop-zone-active' : ''
                   }`}
                 >
-                  <MovableGlassPanel
-                    id={`kanban_col_${drv.id}`}
-                    resetTrigger={resetTrigger}
+                  <GlassPanel
                     title={
                       <span className="inline-flex items-center gap-2">
                         <span
@@ -1904,7 +1860,11 @@ export const AdminDashboard: React.FC = () => {
                           <div
                             key={a.id}
                             draggable
-                            onDragStart={() => setDraggedAssignmentId(a.id)}
+                            onDragStart={(e) => {
+                              e.dataTransfer.effectAllowed = 'move';
+                              e.dataTransfer.setData('text/plain', String(a.id));
+                              setDraggedAssignmentId(a.id);
+                            }}
                             onDragEnd={() => {
                               setDraggedAssignmentId(null);
                               setDragOverStopId(null);
@@ -1986,7 +1946,7 @@ export const AdminDashboard: React.FC = () => {
                         );
                       })
                     )}
-                  </MovableGlassPanel>
+                  </GlassPanel>
                 </div>
               );
             })}
@@ -1995,9 +1955,7 @@ export const AdminDashboard: React.FC = () => {
 
         {/* TAB 2: KINDERGARTENS CRUD */}
         {activeTab === 'kindergartens' && (
-          <MovableGlassPanel
-            id="admin_kindergartens_table"
-            resetTrigger={resetTrigger}
+          <GlassPanel
             title={`Registered Kindergartens (${filteredKindergartens.length})`}
             subtitle="Phone numbers are displayed directly underneath each kindergarten name"
             bodyClassName="overflow-x-auto"
@@ -2084,14 +2042,12 @@ export const AdminDashboard: React.FC = () => {
                 ))}
               </tbody>
             </table>
-          </MovableGlassPanel>
+          </GlassPanel>
         )}
 
         {/* TAB 3: DRIVERS CRUD (Includes Driver Map Color & Online GPS Status) */}
         {activeTab === 'drivers' && (
-          <MovableGlassPanel
-            id="admin_drivers_table"
-            resetTrigger={resetTrigger}
+          <GlassPanel
             title={`Active Delivery Drivers (${drivers.length})`}
             subtitle="Manage driver accounts, custom route colors, live GPS status, and route progress"
             bodyClassName="overflow-x-auto"
@@ -2203,14 +2159,12 @@ export const AdminDashboard: React.FC = () => {
                 })}
               </tbody>
             </table>
-          </MovableGlassPanel>
+          </GlassPanel>
         )}
 
         {/* TAB 4: CARS FLEET CRUD (Multi-Driver Support, No Duplicate Function) */}
         {activeTab === 'cars' && (
-          <MovableGlassPanel
-            id="admin_cars_table"
-            resetTrigger={resetTrigger}
+          <GlassPanel
             title={`Fleet Cars (${filteredCars.length})`}
             subtitle="Only Admin & Dispatchers can add, edit, or delete cars • Multiple drivers can share the same car"
             bodyClassName="overflow-x-auto"
@@ -2329,14 +2283,12 @@ export const AdminDashboard: React.FC = () => {
                 )}
               </tbody>
             </table>
-          </MovableGlassPanel>
+          </GlassPanel>
         )}
 
         {/* TAB 5: DISPATCHERS MANAGEMENT */}
         {activeTab === 'dispatchers' && (
-          <MovableGlassPanel
-            id="admin_dispatchers_table"
-            resetTrigger={resetTrigger}
+          <GlassPanel
             title={`Dispatchers (${dispatchers.length})`}
             subtitle={
               isMasterAdmin
@@ -2412,7 +2364,7 @@ export const AdminDashboard: React.FC = () => {
                 )}
               </tbody>
             </table>
-          </MovableGlassPanel>
+          </GlassPanel>
         )}
       </main>
 
@@ -2420,9 +2372,7 @@ export const AdminDashboard: React.FC = () => {
       {refreshConfirmOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
           <div className="max-w-md w-full">
-            <MovableGlassPanel
-              id="modal_refresh_confirm"
-              allowMinimize={false}
+            <GlassPanel
               title={
                 <span className="inline-flex items-center gap-2 text-[#F01111]">
                   <AlertTriangle className="w-4 h-4 text-[#F01111]" />
@@ -2471,7 +2421,7 @@ export const AdminDashboard: React.FC = () => {
                   {refreshingData ? 'Resetting...' : 'Yes, Refresh Data'}
                 </button>
               </div>
-            </MovableGlassPanel>
+            </GlassPanel>
           </div>
         </div>
       )}
@@ -2480,11 +2430,13 @@ export const AdminDashboard: React.FC = () => {
       {kgModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
           <div className="max-w-lg w-full">
-            <MovableGlassPanel
-              id="modal_kindergarten"
-              allowMinimize={false}
+            <GlassPanel
               title={editingKg ? 'Edit Kindergarten' : 'Add New Kindergarten'}
-              subtitle="Draggable Liquid Glass Modal"
+              subtitle={
+                editingKg
+                  ? 'Update kindergarten delivery details'
+                  : 'Register a new kindergarten stop'
+              }
               headerRight={
                 <button
                   onClick={() => setKgModalOpen(false)}
@@ -2616,7 +2568,7 @@ export const AdminDashboard: React.FC = () => {
                   </button>
                 </div>
               </form>
-            </MovableGlassPanel>
+            </GlassPanel>
           </div>
         </div>
       )}
@@ -2625,9 +2577,7 @@ export const AdminDashboard: React.FC = () => {
       {driverModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
           <div className="max-w-md w-full">
-            <MovableGlassPanel
-              id="modal_driver"
-              allowMinimize={false}
+            <GlassPanel
               title={editingDriver ? 'Edit Driver Account' : 'Add New Driver'}
               subtitle="Customize driver details and route map color"
               headerRight={
@@ -2734,7 +2684,7 @@ export const AdminDashboard: React.FC = () => {
                   </button>
                 </div>
               </form>
-            </MovableGlassPanel>
+            </GlassPanel>
           </div>
         </div>
       )}
@@ -2743,9 +2693,7 @@ export const AdminDashboard: React.FC = () => {
       {dispatcherModalOpen && isMasterAdmin && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
           <div className="max-w-md w-full">
-            <MovableGlassPanel
-              id="modal_dispatcher"
-              allowMinimize={false}
+            <GlassPanel
               title={editingDispatcher ? 'Edit Dispatcher' : 'Create New Dispatcher'}
               subtitle="Dispatchers have full operational access except creating/deleting dispatchers"
               headerRight={
@@ -2835,7 +2783,7 @@ export const AdminDashboard: React.FC = () => {
                   </button>
                 </div>
               </form>
-            </MovableGlassPanel>
+            </GlassPanel>
           </div>
         </div>
       )}
@@ -2844,9 +2792,7 @@ export const AdminDashboard: React.FC = () => {
       {carModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
           <div className="max-w-md w-full">
-            <MovableGlassPanel
-              id="modal_car"
-              allowMinimize={false}
+            <GlassPanel
               title={editingCar ? 'Edit Car' : 'Add New Car'}
               subtitle="Several drivers can take the same car simultaneously"
               headerRight={
@@ -2943,7 +2889,7 @@ export const AdminDashboard: React.FC = () => {
                   </button>
                 </div>
               </form>
-            </MovableGlassPanel>
+            </GlassPanel>
           </div>
         </div>
       )}
