@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+**/dist/
+bin/
+**/bin/
+obj/
+**/obj/
+*.tsbuildinfo
+
+# IDE & OS
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.DS_Store
+Thumbs.db
+
+# Vercel & Env
+.vercel/
+.env
+.env.*
+!.env.example

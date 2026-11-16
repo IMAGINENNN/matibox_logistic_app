@@ -1,0 +1,311 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* MATiBOX Brand Palette (Light Theme) */
+  --mb-orange: #E97905;
+  --mb-orange-hover: #B65F04;
+  --mb-red: #F01111;
+  --mb-red-dark: #C40F0F;
+  --mb-brown-dark: #5A340F;
+  --mb-brown-deep: #3E2000;
+  --mb-brown-body: #865B31;
+  --mb-brown-earth: #61472B;
+  --mb-taupe: #534A42;
+  --mb-cream: #FFFFED;
+  --mb-gold: #FCB900;
+
+  /* Default: Warm Daylight Liquid Glass Theme */
+  --glass-bg: rgba(255, 255, 255, 0.62);
+  --glass-bg-strong: rgba(255, 255, 255, 0.82);
+  --glass-bg-subtle: rgba(255, 255, 245, 0.46);
+  --glass-border: rgba(255, 255, 255, 0.78);
+  --glass-border-accent: rgba(233, 121, 5, 0.35);
+  --glass-shadow:
+    0 18px 42px -10px rgba(90, 52, 15, 0.13),
+    0 4px 14px -2px rgba(83, 74, 66, 0.08),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.92),
+    inset 0 -1px 1px rgba(233, 121, 5, 0.1);
+  --glass-shadow-elevated:
+    0 28px 64px -12px rgba(62, 32, 0, 0.24),
+    0 8px 24px -4px rgba(233, 121, 5, 0.14),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.95),
+    inset 0 -1px 2px rgba(233, 121, 5, 0.18);
+  --text-heading: #422407;
+  --text-body: #6E4720;
+  --text-muted: #8C6A48;
+  --page-canvas: #F9F5EF;
+}
+
+.theme-dark {
+  /* Uber-Inspired Black & Electric Blue Liquid Glass Theme */
+  --glass-bg: rgba(10, 14, 23, 0.74);
+  --glass-bg-strong: rgba(6, 9, 16, 0.88);
+  --glass-bg-subtle: rgba(17, 24, 39, 0.62);
+  --glass-border: rgba(59, 130, 246, 0.24);
+  --glass-border-accent: rgba(39, 110, 241, 0.58);
+  --glass-shadow:
+    0 22px 50px -10px rgba(0, 0, 0, 0.78),
+    0 4px 18px -2px rgba(39, 110, 241, 0.14),
+    inset 0 1px 1.5px rgba(147, 197, 253, 0.22),
+    inset 0 -1px 1px rgba(39, 110, 241, 0.18);
+  --glass-shadow-elevated:
+    0 32px 76px -12px rgba(0, 0, 0, 0.88),
+    0 8px 30px -4px rgba(39, 110, 241, 0.28),
+    inset 0 1.5px 2px rgba(191, 219, 254, 0.28),
+    inset 0 -1px 2px rgba(39, 110, 241, 0.32);
+  --text-heading: #F8FAFC;
+  --text-body: #CBD5E1;
+  --text-muted: #94A3B8;
+  --page-canvas: #03060C;
+}
+
+body {
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  background-color: var(--page-canvas);
+  color: var(--text-heading);
+  overflow-x: hidden;
+}
+
+/* Ambient Spatial Background */
+.liquid-canvas {
+  position: relative;
+  min-height: 100vh;
+  background-color: var(--page-canvas);
+  background-image:
+    radial-gradient(at 8% 12%, rgba(233, 121, 5, 0.22) 0px, transparent 48%),
+    radial-gradient(at 88% 15%, rgba(240, 17, 17, 0.13) 0px, transparent 44%),
+    radial-gradient(at 52% 55%, rgba(252, 185, 0, 0.14) 0px, transparent 52%),
+    radial-gradient(at 82% 85%, rgba(90, 52, 15, 0.18) 0px, transparent 50%),
+    radial-gradient(at 15% 88%, rgba(233, 121, 5, 0.16) 0px, transparent 45%);
+  background-attachment: fixed;
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+/* Uber Black & Blue Ambient Glows in Dark Theme */
+.theme-dark.liquid-canvas {
+  background-color: #03060C;
+  background-image:
+    radial-gradient(at 12% 10%, rgba(39, 110, 241, 0.26) 0px, transparent 48%),
+    radial-gradient(at 88% 14%, rgba(29, 78, 216, 0.22) 0px, transparent 45%),
+    radial-gradient(at 50% 50%, rgba(15, 23, 42, 0.85) 0px, transparent 62%),
+    radial-gradient(at 85% 88%, rgba(59, 130, 246, 0.2) 0px, transparent 48%),
+    radial-gradient(at 15% 85%, rgba(14, 165, 233, 0.14) 0px, transparent 46%);
+}
+
+/* Apple Liquid Glass Core Surfaces */
+.liquid-glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  position: relative;
+}
+
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.38) 0%,
+    rgba(255, 255, 255, 0.04) 45%,
+    rgba(233, 121, 5, 0.05) 100%
+  );
+}
+
+.theme-dark .liquid-glass::before {
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.12) 0%,
+    rgba(255, 255, 255, 0.02) 45%,
+    rgba(39, 110, 241, 0.08) 100%
+  );
+}
+
+.liquid-glass-strong {
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(36px) saturate(200%);
+  -webkit-backdrop-filter: blur(36px) saturate(200%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow-elevated);
+}
+
+.liquid-glass-subtle {
+  background: var(--glass-bg-subtle);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid var(--glass-border);
+}
+
+/* Tactile Primary CTA Button (Orange in Daylight, Uber Blue in Dark Mode) */
+.liquid-btn-orange {
+  background: linear-gradient(180deg, #F58612 0%, #E97905 55%, #CC6802 100%);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  box-shadow:
+    0 10px 24px -6px rgba(233, 121, 5, 0.55),
+    inset 0 1.5px 1px rgba(255, 255, 255, 0.55),
+    inset 0 -1.5px 2px rgba(130, 60, 0, 0.35);
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.liquid-btn-orange:hover:not(:disabled) {
+  background: linear-gradient(180deg, #E97905 0%, #B65F04 100%);
+  transform: translateY(-1px);
+  box-shadow:
+    0 14px 28px -6px rgba(233, 121, 5, 0.68),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.65);
+}
+
+.theme-dark .liquid-btn-orange {
+  background: linear-gradient(180deg, #3B82F6 0%, #276EF1 55%, #1D4ED8 100%);
+  color: #FFFFFF;
+  border: 1px solid rgba(147, 197, 253, 0.45);
+  box-shadow:
+    0 10px 26px -6px rgba(39, 110, 241, 0.62),
+    inset 0 1.5px 1px rgba(255, 255, 255, 0.45),
+    inset 0 -1.5px 2px rgba(15, 23, 42, 0.5);
+}
+
+.theme-dark .liquid-btn-orange:hover:not(:disabled) {
+  background: linear-gradient(180deg, #60A5FA 0%, #2563EB 100%);
+  transform: translateY(-1px);
+  box-shadow:
+    0 14px 32px -6px rgba(39, 110, 241, 0.78),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.6);
+}
+
+.liquid-btn-orange:active:not(:disabled) {
+  transform: translateY(0px) scale(0.985);
+}
+
+/* Scarlet Red Accent Pill / Button */
+.liquid-btn-red {
+  background: linear-gradient(180deg, #FF2A2A 0%, #F01111 60%, #C40F0F 100%);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  box-shadow:
+    0 8px 20px -5px rgba(240, 17, 17, 0.45),
+    inset 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+/* Secondary Dark Glass Button (Espresso in Light Mode, Uber Obsidian in Dark Mode) */
+.liquid-btn-espresso {
+  background: linear-gradient(180deg, rgba(90, 52, 15, 0.92) 0%, rgba(62, 32, 0, 0.96) 100%);
+  color: #FFFFED;
+  border: 1px solid rgba(255, 235, 205, 0.28);
+  box-shadow:
+    0 10px 22px -6px rgba(62, 32, 0, 0.4),
+    inset 0 1px 1px rgba(255, 255, 255, 0.28);
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.liquid-btn-espresso:hover:not(:disabled) {
+  background: linear-gradient(180deg, rgba(112, 66, 21, 0.95) 0%, rgba(80, 42, 4, 0.98) 100%);
+  transform: translateY(-1px);
+}
+
+.theme-dark .liquid-btn-espresso {
+  background: linear-gradient(180deg, rgba(17, 24, 39, 0.95) 0%, rgba(3, 7, 18, 0.98) 100%);
+  color: #F8FAFC;
+  border: 1px solid rgba(59, 130, 246, 0.38);
+  box-shadow:
+    0 10px 24px -6px rgba(0, 0, 0, 0.7),
+    inset 0 1px 1px rgba(147, 197, 253, 0.22);
+}
+
+.theme-dark .liquid-btn-espresso:hover:not(:disabled) {
+  background: linear-gradient(180deg, rgba(30, 41, 59, 0.98) 0%, rgba(15, 23, 42, 1) 100%);
+  border-color: rgba(59, 130, 246, 0.65);
+}
+
+/* Drag and Drop Interactive States */
+.draggable-item {
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.draggable-item.is-dragging {
+  opacity: 0.65;
+  transform: scale(1.02) rotate(0.6deg);
+  box-shadow: 0 24px 48px -8px rgba(39, 110, 241, 0.42) !important;
+  z-index: 50;
+}
+
+.drop-zone-active {
+  outline: 2px dashed #276EF1 !important;
+  outline-offset: -2px;
+  background-color: rgba(39, 110, 241, 0.14) !important;
+}
+
+/* Custom Leaflet container & marker styling */
+.leaflet-container {
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+  z-index: 10;
+  border-radius: 1.25rem;
+}
+
+.custom-pin-icon {
+  background: transparent;
+  border: none;
+}
+
+.leaflet-popup-content-wrapper {
+  background: rgba(255, 253, 249, 0.92) !important;
+  backdrop-filter: blur(22px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(190%) !important;
+  border: 1px solid rgba(233, 121, 5, 0.32) !important;
+  border-radius: 18px !important;
+  box-shadow:
+    0 20px 44px -10px rgba(90, 52, 15, 0.28),
+    inset 0 1px 1px rgba(255, 255, 255, 0.9) !important;
+  color: #3E2000 !important;
+}
+
+.leaflet-popup-tip {
+  background: rgba(255, 253, 249, 0.92) !important;
+}
+
+/* Live Driver GPS Pulse Animation */
+@keyframes driverPulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.75;
+  }
+  70% {
+    transform: scale(2.1);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.1);
+    opacity: 0;
+  }
+}
+
+.driver-gps-pulse {
+  animation: driverPulse 2s infinite cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Subtle Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.08);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.38);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(39, 110, 241, 0.7);
+}
