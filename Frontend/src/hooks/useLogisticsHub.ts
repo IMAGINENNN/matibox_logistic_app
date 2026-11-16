@@ -9,12 +9,14 @@ export function useLogisticsHub(onLogisticsChanged: () => void) {
 
   useEffect(() => {
     const token = localStorage.getItem('matibox_token');
+    let disposed = false;
+
     const connection = new signalR.HubConnectionBuilder()
       .withUrl(`${api.baseUrl}/hubs/logistics`, {
         accessTokenFactory: () => token || ''
       })
       .withAutomaticReconnect()
-      .configureLogging(signalR.LogLevel.Warning)
+      .configureLogging(signalR.LogLevel.Error)
       .build();
 
     connection.on('LogisticsChanged', () => {
@@ -28,13 +30,24 @@ export function useLogisticsHub(onLogisticsChanged: () => void) {
     });
     connection.onclose(() => setConnected(false));
 
-    connection
-      .start()
-      .then(() => setConnected(true))
-      .catch(() => setConnected(false));
+    const startTimer = window.setTimeout(() => {
+      if (disposed) return;
+      connection
+        .start()
+        .then(() => {
+          if (!disposed) setConnected(true);
+        })
+        .catch(() => {
+          if (!disposed) setConnected(false);
+        });
+    }, 0);
 
     return () => {
-      connection.stop();
+      disposed = true;
+      window.clearTimeout(startTimer);
+      if (connection.state !== signalR.HubConnectionState.Disconnected) {
+        void connection.stop();
+      }
     };
   }, []);
 

@@ -3,278 +3,328 @@
 @tailwind utilities;
 
 :root {
-  /* MATiBOX Brand Palette (Light Theme) */
-  --mb-orange: #E97905;
-  --mb-orange-hover: #B65F04;
-  --mb-red: #F01111;
-  --mb-red-dark: #C40F0F;
-  --mb-brown-dark: #5A340F;
-  --mb-brown-deep: #3E2000;
-  --mb-brown-body: #865B31;
-  --mb-brown-earth: #61472B;
-  --mb-taupe: #534A42;
-  --mb-cream: #FFFFED;
-  --mb-gold: #FCB900;
+  /* ==========================================================================
+     MATiBOX Design System Tokens — Daylight Studio Theme
+     Apple Visual Craft • Uber Functional Clarity • Modern SaaS Structure
+     ========================================================================== */
 
-  /* Default: Warm Daylight Liquid Glass Theme */
-  --glass-bg: rgba(255, 255, 255, 0.62);
-  --glass-bg-strong: rgba(255, 255, 255, 0.82);
-  --glass-bg-subtle: rgba(255, 255, 245, 0.46);
-  --glass-border: rgba(255, 255, 255, 0.78);
-  --glass-border-accent: rgba(233, 121, 5, 0.35);
-  --glass-shadow:
-    0 18px 42px -10px rgba(90, 52, 15, 0.13),
-    0 4px 14px -2px rgba(83, 74, 66, 0.08),
-    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.92),
-    inset 0 -1px 1px rgba(233, 121, 5, 0.1);
-  --glass-shadow-elevated:
-    0 28px 64px -12px rgba(62, 32, 0, 0.24),
-    0 8px 24px -4px rgba(233, 121, 5, 0.14),
-    inset 0 1.5px 2px rgba(255, 255, 255, 0.95),
-    inset 0 -1px 2px rgba(233, 121, 5, 0.18);
-  --text-heading: #422407;
-  --text-body: #6E4720;
-  --text-muted: #8C6A48;
-  --page-canvas: #F9F5EF;
+  /* Typography */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-brand: "Montserrat", var(--font-display);
+
+  /* Fluid Type Scale */
+  --text-display: clamp(1.25rem, 1.1rem + 0.65vw, 1.5625rem);
+  --text-title: clamp(0.95rem, 0.9rem + 0.28vw, 1.125rem);
+  --text-body: clamp(0.8125rem, 0.79rem + 0.12vw, 0.875rem);
+
+  /* Daylight Palette */
+  --bg-canvas: #F5F4F0;
+  --surface-base: #FFFFFF;
+  --surface-elevated: #FAF9F6;
+  --surface-subtle: #F1EFEA;
+  --surface-hover: #EAE7E0;
+  --surface-glass: rgba(255, 255, 255, 0.78);
+  --surface-glass-strong: rgba(255, 255, 255, 0.9);
+
+  /* Borders & Hairlines */
+  --border-subtle: rgba(17, 24, 39, 0.08);
+  --border-strong: rgba(17, 24, 39, 0.16);
+  --border-glass: rgba(255, 255, 255, 0.85);
+
+  /* Text Hierarchy (WCAG AA compliant) */
+  --text-heading: #111827;
+  --text-body-color: #374151;
+  --text-muted: #6B7280;
+
+  /* Brand & Action Accents */
+  --accent-primary: #C45D00; /* Accessible MATiBOX Orange on white/light */
+  --accent-primary-vivid: #E97905;
+  --accent-primary-hover: #A84F00;
+  --accent-primary-soft: rgba(233, 121, 5, 0.12);
+  --accent-secondary: #18181B;
+  --accent-secondary-hover: #27272A;
+
+  /* Semantic Tokens */
+  --status-success: #059669;
+  --status-success-soft: rgba(16, 185, 129, 0.12);
+  --status-warning: #D97706;
+  --status-warning-soft: rgba(245, 158, 11, 0.14);
+  --status-danger: #DC2626;
+  --status-danger-soft: rgba(239, 68, 68, 0.12);
+
+  /* Shadows */
+  --shadow-surface: 0 1px 2px rgba(17, 24, 39, 0.04), 0 8px 24px -6px rgba(17, 24, 39, 0.06);
+  --shadow-glass: 0 12px 36px -8px rgba(17, 24, 39, 0.12), 0 2px 8px -2px rgba(17, 24, 39, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --shadow-elevated: 0 24px 48px -12px rgba(17, 24, 39, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  /* Motion */
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Backward-compatible aliases */
+  --text-body: var(--text-body-color);
 }
 
 .theme-dark {
-  /* Uber-Inspired Black & Electric Blue Liquid Glass Theme */
-  --glass-bg: rgba(10, 14, 23, 0.74);
-  --glass-bg-strong: rgba(6, 9, 16, 0.88);
-  --glass-bg-subtle: rgba(17, 24, 39, 0.62);
-  --glass-border: rgba(59, 130, 246, 0.24);
-  --glass-border-accent: rgba(39, 110, 241, 0.58);
-  --glass-shadow:
-    0 22px 50px -10px rgba(0, 0, 0, 0.78),
-    0 4px 18px -2px rgba(39, 110, 241, 0.14),
-    inset 0 1px 1.5px rgba(147, 197, 253, 0.22),
-    inset 0 -1px 1px rgba(39, 110, 241, 0.18);
-  --glass-shadow-elevated:
-    0 32px 76px -12px rgba(0, 0, 0, 0.88),
-    0 8px 30px -4px rgba(39, 110, 241, 0.28),
-    inset 0 1.5px 2px rgba(191, 219, 254, 0.28),
-    inset 0 -1px 2px rgba(39, 110, 241, 0.32);
+  /* ==========================================================================
+     MATiBOX Dark Theme — Uber Midnight Black & Electric Blue + Apple Glass
+     ========================================================================== */
+  --bg-canvas: #05070B;
+  --surface-base: #0C1018;
+  --surface-elevated: #121824;
+  --surface-subtle: #161E2C;
+  --surface-hover: #1D2739;
+  --surface-glass: rgba(12, 16, 24, 0.78);
+  --surface-glass-strong: rgba(10, 14, 21, 0.9);
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --border-glass: rgba(255, 255, 255, 0.13);
+
   --text-heading: #F8FAFC;
-  --text-body: #CBD5E1;
-  --text-muted: #94A3B8;
-  --page-canvas: #03060C;
+  --text-body-color: #CBD5E1;
+  --text-muted: #8B9BB0;
+
+  --accent-primary: #276EF1;
+  --accent-primary-vivid: #3B82F6;
+  --accent-primary-hover: #1D5BD6;
+  --accent-primary-soft: rgba(39, 110, 241, 0.16);
+  --accent-secondary: #1F2937;
+  --accent-secondary-hover: #374151;
+
+  --status-success: #10B981;
+  --status-success-soft: rgba(16, 185, 129, 0.16);
+  --status-warning: #F59E0B;
+  --status-warning-soft: rgba(245, 158, 11, 0.16);
+  --status-danger: #EF4444;
+  --status-danger-soft: rgba(239, 68, 68, 0.16);
+
+  --shadow-surface: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 28px -8px rgba(0, 0, 0, 0.55);
+  --shadow-glass: 0 16px 40px -10px rgba(0, 0, 0, 0.72), 0 0 0 1px rgba(255, 255, 255, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  --shadow-elevated: 0 28px 60px -12px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+
+  --text-body: var(--text-body-color);
 }
 
+html,
 body {
-  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
-  background-color: var(--page-canvas);
+  font-family: var(--font-sans);
+  background-color: var(--bg-canvas);
   color: var(--text-heading);
-  overflow-x: hidden;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Ambient Spatial Background */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Spatial App Canvas — Restrained Ambient Depth */
 .liquid-canvas {
   position: relative;
-  min-height: 100vh;
-  background-color: var(--page-canvas);
+  min-height: 100dvh;
+  background-color: var(--bg-canvas);
   background-image:
-    radial-gradient(at 8% 12%, rgba(233, 121, 5, 0.22) 0px, transparent 48%),
-    radial-gradient(at 88% 15%, rgba(240, 17, 17, 0.13) 0px, transparent 44%),
-    radial-gradient(at 52% 55%, rgba(252, 185, 0, 0.14) 0px, transparent 52%),
-    radial-gradient(at 82% 85%, rgba(90, 52, 15, 0.18) 0px, transparent 50%),
-    radial-gradient(at 15% 88%, rgba(233, 121, 5, 0.16) 0px, transparent 45%);
-  background-attachment: fixed;
-  transition: background-color 0.35s ease, color 0.35s ease;
+    radial-gradient(60% 45% at 10% 0%, rgba(233, 121, 5, 0.1) 0%, transparent 70%),
+    radial-gradient(50% 40% at 92% 8%, rgba(252, 185, 0, 0.08) 0%, transparent 70%);
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-/* Uber Black & Blue Ambient Glows in Dark Theme */
 .theme-dark.liquid-canvas {
-  background-color: #03060C;
+  background-color: var(--bg-canvas);
   background-image:
-    radial-gradient(at 12% 10%, rgba(39, 110, 241, 0.26) 0px, transparent 48%),
-    radial-gradient(at 88% 14%, rgba(29, 78, 216, 0.22) 0px, transparent 45%),
-    radial-gradient(at 50% 50%, rgba(15, 23, 42, 0.85) 0px, transparent 62%),
-    radial-gradient(at 85% 88%, rgba(59, 130, 246, 0.2) 0px, transparent 48%),
-    radial-gradient(at 15% 85%, rgba(14, 165, 233, 0.14) 0px, transparent 46%);
+    radial-gradient(65% 48% at 15% 0%, rgba(39, 110, 241, 0.16) 0%, transparent 72%),
+    radial-gradient(45% 40% at 90% 6%, rgba(14, 165, 233, 0.09) 0%, transparent 70%);
 }
 
-/* Apple Liquid Glass Core Surfaces */
+/* ============================================================================
+   Surface Materials (Restrained Apple Liquid Glass + Crisp SaaS Surfaces)
+   ============================================================================ */
+
+/* Selective Apple Liquid Glass — For floating bars, overlays, modals, HUDs */
+.glass-floating {
+  background: var(--surface-glass);
+  backdrop-filter: blur(20px) saturate(165%);
+  -webkit-backdrop-filter: blur(20px) saturate(165%);
+  border: 1px solid var(--border-glass);
+  box-shadow: var(--shadow-glass);
+}
+
+.glass-floating-strong {
+  background: var(--surface-glass-strong);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--border-glass);
+  box-shadow: var(--shadow-elevated);
+}
+
+/* Clean SaaS Structural Surface — High readability, zero scroll blur overhead */
+.surface-card {
+  background: var(--surface-base);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-surface);
+}
+
+.surface-elevated {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-subtle);
+}
+
+.surface-subtle {
+  background: var(--surface-subtle);
+  border: 1px solid var(--border-subtle);
+}
+
+/* Backward compatibility helpers where needed */
 .liquid-glass {
-  background: var(--glass-bg);
-  backdrop-filter: blur(28px) saturate(190%);
-  -webkit-backdrop-filter: blur(28px) saturate(190%);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  position: relative;
-}
-
-.liquid-glass::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.38) 0%,
-    rgba(255, 255, 255, 0.04) 45%,
-    rgba(233, 121, 5, 0.05) 100%
-  );
-}
-
-.theme-dark .liquid-glass::before {
-  background: linear-gradient(
-    135deg,
-    rgba(59, 130, 246, 0.12) 0%,
-    rgba(255, 255, 255, 0.02) 45%,
-    rgba(39, 110, 241, 0.08) 100%
-  );
+  background: var(--surface-base);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-surface);
 }
 
 .liquid-glass-strong {
-  background: var(--glass-bg-strong);
-  backdrop-filter: blur(36px) saturate(200%);
-  -webkit-backdrop-filter: blur(36px) saturate(200%);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow-elevated);
+  background: var(--surface-glass-strong);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--border-glass);
+  box-shadow: var(--shadow-elevated);
 }
 
 .liquid-glass-subtle {
-  background: var(--glass-bg-subtle);
-  backdrop-filter: blur(18px) saturate(160%);
-  -webkit-backdrop-filter: blur(18px) saturate(160%);
-  border: 1px solid var(--glass-border);
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-subtle);
 }
 
-/* Tactile Primary CTA Button (Orange in Daylight, Uber Blue in Dark Mode) */
-.liquid-btn-orange {
-  background: linear-gradient(180deg, #F58612 0%, #E97905 55%, #CC6802 100%);
+/* ============================================================================
+   Uber-Inspired Confident Interactive Controls
+   ============================================================================ */
+
+.btn-primary {
+  background-color: var(--accent-primary);
   color: #FFFFFF;
-  border: 1px solid rgba(255, 255, 255, 0.42);
-  box-shadow:
-    0 10px 24px -6px rgba(233, 121, 5, 0.55),
-    inset 0 1.5px 1px rgba(255, 255, 255, 0.55),
-    inset 0 -1.5px 2px rgba(130, 60, 0, 0.35);
-  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  border: 1px solid transparent;
+  box-shadow: 0 2px 8px -2px rgba(39, 110, 241, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  transition: background-color 0.16s var(--ease-spring), transform 0.14s var(--ease-spring), box-shadow 0.16s ease;
 }
 
-.liquid-btn-orange:hover:not(:disabled) {
-  background: linear-gradient(180deg, #E97905 0%, #B65F04 100%);
-  transform: translateY(-1px);
-  box-shadow:
-    0 14px 28px -6px rgba(233, 121, 5, 0.68),
-    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.65);
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--accent-primary-hover);
 }
 
-.theme-dark .liquid-btn-orange {
-  background: linear-gradient(180deg, #3B82F6 0%, #276EF1 55%, #1D4ED8 100%);
-  color: #FFFFFF;
-  border: 1px solid rgba(147, 197, 253, 0.45);
-  box-shadow:
-    0 10px 26px -6px rgba(39, 110, 241, 0.62),
-    inset 0 1.5px 1px rgba(255, 255, 255, 0.45),
-    inset 0 -1.5px 2px rgba(15, 23, 42, 0.5);
+.btn-primary:active:not(:disabled) {
+  transform: scale(0.98);
 }
 
-.theme-dark .liquid-btn-orange:hover:not(:disabled) {
-  background: linear-gradient(180deg, #60A5FA 0%, #2563EB 100%);
-  transform: translateY(-1px);
-  box-shadow:
-    0 14px 32px -6px rgba(39, 110, 241, 0.78),
-    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.6);
+.btn-secondary {
+  background-color: var(--surface-elevated);
+  color: var(--text-heading);
+  border: 1px solid var(--border-strong);
+  transition: background-color 0.16s var(--ease-spring), border-color 0.16s ease, transform 0.14s var(--ease-spring);
 }
 
-.liquid-btn-orange:active:not(:disabled) {
-  transform: translateY(0px) scale(0.985);
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--surface-hover);
 }
 
-/* Scarlet Red Accent Pill / Button */
-.liquid-btn-red {
-  background: linear-gradient(180deg, #FF2A2A 0%, #F01111 60%, #C40F0F 100%);
-  color: #FFFFFF;
-  border: 1px solid rgba(255, 255, 255, 0.38);
-  box-shadow:
-    0 8px 20px -5px rgba(240, 17, 17, 0.45),
-    inset 0 1px 1px rgba(255, 255, 255, 0.5);
+.btn-secondary:active:not(:disabled) {
+  transform: scale(0.98);
 }
 
-/* Secondary Dark Glass Button (Espresso in Light Mode, Uber Obsidian in Dark Mode) */
-.liquid-btn-espresso {
-  background: linear-gradient(180deg, rgba(90, 52, 15, 0.92) 0%, rgba(62, 32, 0, 0.96) 100%);
-  color: #FFFFED;
-  border: 1px solid rgba(255, 235, 205, 0.28);
-  box-shadow:
-    0 10px 22px -6px rgba(62, 32, 0, 0.4),
-    inset 0 1px 1px rgba(255, 255, 255, 0.28);
-  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+/* Input Base */
+.input-field {
+  background-color: var(--surface-elevated);
+  color: var(--text-heading);
+  border: 1px solid var(--border-strong);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
 
-.liquid-btn-espresso:hover:not(:disabled) {
-  background: linear-gradient(180deg, rgba(112, 66, 21, 0.95) 0%, rgba(80, 42, 4, 0.98) 100%);
-  transform: translateY(-1px);
+.input-field::placeholder {
+  color: var(--text-muted);
 }
 
-.theme-dark .liquid-btn-espresso {
-  background: linear-gradient(180deg, rgba(17, 24, 39, 0.95) 0%, rgba(3, 7, 18, 0.98) 100%);
-  color: #F8FAFC;
-  border: 1px solid rgba(59, 130, 246, 0.38);
-  box-shadow:
-    0 10px 24px -6px rgba(0, 0, 0, 0.7),
-    inset 0 1px 1px rgba(147, 197, 253, 0.22);
+.input-field:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-primary-soft);
 }
 
-.theme-dark .liquid-btn-espresso:hover:not(:disabled) {
-  background: linear-gradient(180deg, rgba(30, 41, 59, 0.98) 0%, rgba(15, 23, 42, 1) 100%);
-  border-color: rgba(59, 130, 246, 0.65);
+/* Native Select Dark/Light Option Readability */
+select.input-field option,
+select option {
+  background-color: var(--surface-base);
+  color: var(--text-heading);
 }
 
-/* Drag and Drop Interactive States */
+/* Global Accessible Focus Ring */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* ============================================================================
+   Drag & Drop Interaction States
+   ============================================================================ */
 .draggable-item {
-  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease, opacity 0.2s ease;
+  transition: transform 0.18s var(--ease-spring), box-shadow 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
 }
 
 .draggable-item.is-dragging {
-  opacity: 0.65;
-  transform: scale(1.02) rotate(0.6deg);
-  box-shadow: 0 24px 48px -8px rgba(39, 110, 241, 0.42) !important;
-  z-index: 50;
+  opacity: 0.55;
+  transform: scale(0.99);
+  box-shadow: var(--shadow-elevated);
+  z-index: 40;
 }
 
 .drop-zone-active {
-  outline: 2px dashed #276EF1 !important;
+  outline: 2px dashed var(--accent-primary) !important;
   outline-offset: -2px;
-  background-color: rgba(39, 110, 241, 0.14) !important;
+  background-color: var(--accent-primary-soft) !important;
 }
 
-/* Custom Leaflet container & marker styling */
-.leaflet-container {
-  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
-  z-index: 10;
-  border-radius: 1.25rem;
+/* ============================================================================
+   Microinteractions & Spring Entrance Animations
+   ============================================================================ */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.custom-pin-icon {
-  background: transparent;
-  border: none;
+@keyframes modalEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
-.leaflet-popup-content-wrapper {
-  background: rgba(255, 253, 249, 0.92) !important;
-  backdrop-filter: blur(22px) saturate(190%) !important;
-  -webkit-backdrop-filter: blur(22px) saturate(190%) !important;
-  border: 1px solid rgba(233, 121, 5, 0.32) !important;
-  border-radius: 18px !important;
-  box-shadow:
-    0 20px 44px -10px rgba(90, 52, 15, 0.28),
-    inset 0 1px 1px rgba(255, 255, 255, 0.9) !important;
-  color: #3E2000 !important;
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
-.leaflet-popup-tip {
-  background: rgba(255, 253, 249, 0.92) !important;
-}
-
-/* Live Driver GPS Pulse Animation */
 @keyframes driverPulse {
   0% {
     transform: scale(1);
-    opacity: 0.75;
+    opacity: 0.7;
   }
   70% {
     transform: scale(2.1);
@@ -286,26 +336,99 @@ body {
   }
 }
 
+.animate-enter {
+  animation: fadeSlideUp 0.24s var(--ease-spring) both;
+}
+
+.animate-modal {
+  animation: modalEnter 0.22s var(--ease-spring) both;
+}
+
+.animate-toast {
+  animation: toastSlideIn 0.24s var(--ease-spring) both;
+}
+
 .driver-gps-pulse {
-  animation: driverPulse 2s infinite cubic-bezier(0.22, 1, 0.36, 1);
+  animation: driverPulse 2s infinite var(--ease-spring);
+}
+
+/* ============================================================================
+   Leaflet Map Customization & Clean Popups
+   ============================================================================ */
+.leaflet-container {
+  font-family: var(--font-sans);
+  z-index: 10;
+  border-radius: 0.875rem;
+}
+
+.map-tiles-dark .leaflet-container {
+  background: #0b0f17;
+}
+
+.map-tiles-dark .leaflet-tile-pane {
+  filter: invert(100%) hue-rotate(180deg) brightness(92%) contrast(92%) saturate(75%);
+}
+
+.custom-pin-icon {
+  background: transparent;
+  border: none;
+}
+
+.leaflet-popup-content-wrapper {
+  background: rgba(255, 255, 255, 0.94) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border: 1px solid rgba(17, 24, 39, 0.12) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 20px 44px -10px rgba(0, 0, 0, 0.28) !important;
+  color: #111827 !important;
+}
+
+.leaflet-popup-tip {
+  background: rgba(255, 255, 255, 0.94) !important;
+}
+
+/* Safe area helper for iOS/Android mobile web & PWA */
+.pb-safe {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Reduced Motion Respect */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Subtle Custom Scrollbars */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.08);
-  border-radius: 9999px;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(100, 116, 139, 0.38);
+  background: rgba(148, 163, 184, 0.35);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(39, 110, 241, 0.7);
+  background: var(--accent-primary);
 }

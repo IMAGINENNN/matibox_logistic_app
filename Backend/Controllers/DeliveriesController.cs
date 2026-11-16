@@ -326,29 +326,55 @@ public class DeliveriesController : ControllerBase
         return Ok(items);
     }
 
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<DateOnly, System.Threading.SemaphoreSlim> _dateInitLocks = new();
+
     private async Task EnsureDailyAssignmentsExistAsync(DateOnly date)
     {
-        var allKindergartenIds = await _db.Kindergartens.Select(k => k.Id).ToListAsync();
-        var existingIds = await _db.DeliveryAssignments
-            .Where(d => d.DeliveryDate == date)
-            .Select(d => d.KindergartenId)
-            .ToListAsync();
-
-        var missingIds = allKindergartenIds.Except(existingIds).ToList();
-        if (missingIds.Count > 0)
+        var gate = _dateInitLocks.GetOrAdd(date, _ => new System.Threading.SemaphoreSlim(1, 1));
+        await gate.WaitAsync();
+        try
         {
-            foreach (var kId in missingIds)
+            var allKindergartenIds = await _db.Kindergartens.Select(k => k.Id).ToListAsync();
+            var existingIds = await _db.DeliveryAssignments
+                .Where(d => d.DeliveryDate == date)
+                .Select(d => d.KindergartenId)
+                .ToListAsync();
+
+            var missingIds = allKindergartenIds.Except(existingIds).ToList();
+            if (missingIds.Count > 0)
             {
-                _db.DeliveryAssignments.Add(new DeliveryAssignment
+                var addedEntries = new List<DeliveryAssignment>(missingIds.Count);
+                foreach (var kId in missingIds)
                 {
-                    KindergartenId = kId,
-                    DriverId = null,
-                    DeliveryDate = date,
-                    SequenceOrder = 0,
-                    IsDelivered = false
-                });
+                    var assignment = new DeliveryAssignment
+                    {
+                        KindergartenId = kId,
+                        DriverId = null,
+                        DeliveryDate = date,
+                        SequenceOrder = 0,
+                        IsDelivered = false
+                    };
+                    addedEntries.Add(assignment);
+                    _db.DeliveryAssignments.Add(assignment);
+                }
+
+                try
+                {
+                    await _db.SaveChangesAsync();
+                }
+                catch (DbUpdateException)
+                {
+                    // Another concurrent request or instance already seeded rows for this date.
+                    foreach (var entry in addedEntries)
+                    {
+                        _db.Entry(entry).State = EntityState.Detached;
+                    }
+                }
             }
-            await _db.SaveChangesAsync();
+        }
+        finally
+        {
+            gate.Release();
         }
     }
 
